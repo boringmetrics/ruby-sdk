@@ -1,0 +1,72 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "optparse"
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: bin/publish [options]"
+
+  opts.on("-v", "--version VERSION", "Version to publish") do |v|
+    options[:version] = v
+  end
+
+  opts.on("-k", "--api-key KEY", "RubyGems API key") do |k|
+    options[:api_key] = k
+  end
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+if options[:version].nil?
+  puts "Error: Version is required"
+  exit 1
+end
+
+# Load environment variables from .env.local if it exists
+if File.exist?(File.join(__dir__, "../.env.local"))
+  File.readlines(File.join(__dir__, "../.env.local")).each do |line|
+    next if line.strip.empty? || line.start_with?("#")
+    key, value = line.strip.split("=", 2)
+    ENV[key] = value
+  end
+end
+
+# Use API key from environment if not provided as argument
+if options[:api_key].nil?
+  options[:api_key] = ENV["RUBYGEMS_API_KEY"]
+end
+
+if options[:api_key].nil?
+  puts "Error: RubyGems API key is required (provide with -k or set RUBYGEMS_API_KEY in .env.local)"
+  exit 1
+end
+
+# Update version files
+puts "Updating version to #{options[:version]}..."
+
+# Update boringmetrics version
+version_file = File.join(__dir__, "../boringmetrics/lib/boringmetrics/version.rb")
+content = File.read(version_file)
+content.gsub!(/VERSION = "[^"]+"/, "VERSION = \"#{options[:version]}\"")
+File.write(version_file, content)
+
+# Update boringmetrics-rails version
+rails_version_file = File.join(__dir__, "../boringmetrics-rails/lib/boringmetrics-rails/version.rb")
+rails_content = File.read(rails_version_file)
+rails_content.gsub!(/VERSION = "[^"]+"/, "VERSION = \"#{options[:version]}\"")
+File.write(rails_version_file, rails_content)
+
+# Build gems
+puts "Building gems..."
+system("cd #{__dir__}/.. && bundle exec rake build:all")
+
+# Publish gems
+puts "Publishing gems..."
+ENV["GEM_HOST_API_KEY"] = options[:api_key]
+system("cd #{__dir__}/.. && bundle exec rake release:all")
+
+puts "Done!"
