@@ -32,14 +32,30 @@ namespace :release do
   desc "Release boringmetrics gem"
   task :core do
     Dir.chdir("boringmetrics") do
-      sh "gem push boringmetrics-*.gem"
+      # Clean up old gem files first
+      sh "rm -f *.gem" if Dir.glob("*.gem").any?
+      
+      # Build the gem
+      sh "gem build boringmetrics.gemspec"
+      
+      # Find the specific gem file with the current version
+      gem_file = Dir.glob("boringmetrics-*.gem").first
+      sh "gem push #{gem_file}" if gem_file
     end
   end
 
   desc "Release boringmetrics-rails gem"
   task :rails do
     Dir.chdir("boringmetrics-rails") do
-      sh "gem push boringmetrics-rails-*.gem"
+      # Clean up old gem files first
+      sh "rm -f *.gem" if Dir.glob("*.gem").any?
+      
+      # Build the gem
+      sh "gem build boringmetrics-rails.gemspec"
+      
+      # Find the specific gem file with the current version
+      gem_file = Dir.glob("boringmetrics-rails-*.gem").first
+      sh "gem push #{gem_file}" if gem_file
     end
   end
 end
