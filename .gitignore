@@ -15,3 +15,11 @@ Gemfile.lock
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Copied gem files
+/boringmetrics/README.md
+/boringmetrics/LICENSE
+/boringmetrics/CHANGELOG.md
+/boringmetrics-rails/README.md
+/boringmetrics-rails/LICENSE
+/boringmetrics-rails/CHANGELOG.md
