@@ -47,7 +47,7 @@ BoringMetrics.logs.send(
   type: "log",
   level: "info",
   message: "User signed in",
-  data: { user_id: "123" },
+  data: { userId: "123" },
 )
 
 # Send multiple logs
@@ -58,14 +58,14 @@ BoringMetrics.logs.send_batch([
 
 # Set a live metric value
 BoringMetrics.lives.update(
-  live_id: "metric-123",
+  liveId: "metric-123",
   value: 42,
   operation: "set",
 )
 
 # Increment a live metric value
 BoringMetrics.lives.update(
-  live_id: "metric-123",
+  liveId: "metric-123",
   value: 5,
   operation: "increment",
 )
@@ -78,8 +78,8 @@ In a Rails application, you can initialize the SDK in an initializer:
 ```ruby
 # config/initializers/boringmetrics.rb
 BoringMetrics::Rails.initialize("YOUR_API_TOKEN", {
-  logs_max_batch_size: 50,
-  logs_send_interval: 10
+  logsMaxBatchSize: 50,
+  logsSendInterval: 10
 })
 ```
 

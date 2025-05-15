@@ -15,7 +15,7 @@ module BoringMetrics
     def initialize(token, **config)
       @config = Configuration.new(token, **config)
       @transport = Transport.new(@config)
-      
+
       @logs_queue = Concurrent::Array.new
       @logs_mutex = Mutex.new
       @logs_timer = nil
@@ -34,12 +34,18 @@ module BoringMetrics
     # @return [void]
     def add_log(log)
       log_with_sent_at = log.dup
-      log_with_sent_at[:sent_at] ||= Time.now.iso8601
+
+      # Support both snake_case and camelCase
+      if log_with_sent_at[:sentAt].nil? && log_with_sent_at[:sent_at].nil?
+        log_with_sent_at[:sentAt] = Time.now.iso8601
+      elsif log_with_sent_at[:sent_at] && log_with_sent_at[:sentAt].nil?
+        log_with_sent_at[:sentAt] = log_with_sent_at[:sent_at]
+      end
 
       @logs_mutex.synchronize do
         @logs_queue << log_with_sent_at
-        
-        if @logs_queue.size >= @config.logs_max_batch_size
+
+        if @logs_queue.size >= @config.logsMaxBatchSize
           flush_logs
         elsif @logs_timer.nil?
           schedule_logs_flush
@@ -53,12 +59,18 @@ module BoringMetrics
     # @return [void]
     def update_live(update)
       update_with_sent_at = update.dup
-      update_with_sent_at[:sent_at] ||= Time.now.iso8601
+
+      # Support both snake_case and camelCase
+      if update_with_sent_at[:sentAt].nil? && update_with_sent_at[:sent_at].nil?
+        update_with_sent_at[:sentAt] = Time.now.iso8601
+      elsif update_with_sent_at[:sent_at] && update_with_sent_at[:sentAt].nil?
+        update_with_sent_at[:sentAt] = update_with_sent_at[:sent_at]
+      end
 
       @lives_mutex.synchronize do
         @lives_queue << update_with_sent_at
-        
-        if @lives_queue.size >= @config.lives_max_batch_size
+
+        if @lives_queue.size >= @config.livesMaxBatchSize
           flush_lives
         elsif @lives_timer.nil?
           schedule_lives_flush
@@ -69,7 +81,7 @@ module BoringMetrics
     private
 
     def schedule_logs_flush
-      @logs_timer = Concurrent::ScheduledTask.execute(@config.logs_send_interval) do
+      @logs_timer = Concurrent::ScheduledTask.execute(@config.logsSendInterval) do
         flush_logs
       end
     end
@@ -99,7 +111,7 @@ module BoringMetrics
     end
 
     def schedule_lives_flush
-      @lives_timer = Concurrent::ScheduledTask.execute(@config.lives_debounce_time) do
+      @lives_timer = Concurrent::ScheduledTask.execute(@config.livesDebounceTime) do
         flush_lives
       end
     end

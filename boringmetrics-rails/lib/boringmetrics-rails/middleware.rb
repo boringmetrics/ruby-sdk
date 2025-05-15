@@ -10,7 +10,7 @@ module BoringMetrics
 
       def call(env)
         start_time = Time.now
-        
+
         # Process the request
         begin
           status, headers, response = @app.call(env)
@@ -35,10 +35,10 @@ module BoringMetrics
           # Log request metrics if BoringMetrics is initialized
           if defined?(BoringMetrics.client) && BoringMetrics.client
             duration = ((Time.now - start_time) * 1000).round(2) # in milliseconds
-            
+
             # Update live metric for request duration
             BoringMetrics.lives.update(
-              live_id: "request_duration",
+              liveId: "request_duration",
               value: duration,
               operation: "set"
             )

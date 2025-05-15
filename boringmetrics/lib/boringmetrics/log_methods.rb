@@ -17,8 +17,8 @@ module BoringMetrics
     # @option log [String] :level The log level (trace, debug, info, warn, error, fatal)
     # @option log [String] :message The log message
     # @option log [Hash] :data Additional structured data (optional)
-    # @option log [String] :session_id Session identifier for grouping related logs (optional)
-    # @option log [String] :sent_at ISO8601 date - will be automatically set if not provided
+    # @option log [String] :sessionId Session identifier for grouping related logs (optional)
+    # @option log [String] :sentAt ISO8601 date - will be automatically set if not provided
     # @return [void]
     def send(log)
       @client.add_log(log)

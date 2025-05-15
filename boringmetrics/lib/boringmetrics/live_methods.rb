@@ -13,10 +13,10 @@ module BoringMetrics
     # Update a live metric value
     #
     # @param update [Hash] The live update to send
-    # @option update [String] :live_id The ID of the live metric
+    # @option update [String] :liveId The ID of the live metric
     # @option update [Numeric] :value The value to set or increment
     # @option update [String] :operation The operation to perform ("set" or "increment")
-    # @option update [String] :sent_at ISO8601 date - will be automatically set if not provided
+    # @option update [String] :sentAt ISO8601 date - will be automatically set if not provided
     # @return [void]
     def update(update)
       @client.update_live(update)

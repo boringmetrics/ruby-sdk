@@ -2,13 +2,15 @@
 
 module BoringMetrics
   class Configuration
-    attr_accessor :api_url, :max_retry_attempts, :logs_max_batch_size, :logs_send_interval
-    
+    attr_accessor :apiUrl, :maxRetryAttempts, :logsMaxBatchSize, :logsSendInterval, :livesMaxBatchSize, :livesDebounceTime
+
     def initialize
-      @api_url = "https://api.getboringmetrics.com"
-      @max_retry_attempts = 5
-      @logs_max_batch_size = 100
-      @logs_send_interval = 5 # seconds
+      @apiUrl = "https://api.getboringmetrics.com"
+      @maxRetryAttempts = 5
+      @logsMaxBatchSize = 100
+      @logsSendInterval = 5 # seconds
+      @livesMaxBatchSize = 20
+      @livesDebounceTime = 1 # seconds
     end
   end
 end
