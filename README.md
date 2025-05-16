@@ -6,8 +6,8 @@ This is a Ruby SDK for the Boring Metrics API. It provides a simple and efficien
 
 The SDK is available for the following platforms:
 
-- [`boringmetrics`](https://github.com/boringmetrics/ruby-sdk/tree/main/packages/boringmetrics): SDK for Ruby
-- [`boringmetrics-rails`](https://github.com/boringmetrics/ruby-sdk/tree/main/packages/boringmetrics-rails): SDK for Ruby on Rails
+- [`boringmetrics`](https://github.com/boringmetrics/ruby-sdk/tree/main/boringmetrics): SDK for Ruby
+- [`boringmetrics-rails`](https://github.com/boringmetrics/ruby-sdk/tree/main/boringmetrics-rails): SDK for Ruby on Rails
 
 ## Installation
 
